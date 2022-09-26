@@ -37,7 +37,7 @@
       },
       {
         "command": "extension-to-3-0.login",
-        "title": "log in"
+        "title": "config"
       },
       {
         "command": "nodeDependencies.refreshEntry",
@@ -49,7 +49,7 @@
       },
       {
         "command": "nodeDependencies.addEntry",
-        "title": "Add"
+        "title": "commands window"
       },
       {
         "command": "nodeDependencies.checkTable",
@@ -86,7 +86,7 @@
     "viewsWelcome": [
       {
         "view": "nodeDependencies",
-        "contents": "No node dependencies found [learn more](https://github.com/wjsvec/TDengine-VS-Code-Extension).\n[log in](command:extension-to-3-0.login)"
+        "contents": "This is TDengine vscode extension find document [here](https://github.com/wjsvec/extension-to-3-0).\n[Start config](command:extension-to-3-0.login)"
       }
     ],
     "menus": {
@@ -98,6 +98,10 @@
         },
         {
           "command": "nodeDependencies.addEntry",
+          "when": "view == nodeDependencies"
+        },
+        {
+          "command": "extension-to-3-0.login",
           "when": "view == nodeDependencies"
         }
       ],
