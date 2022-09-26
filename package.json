@@ -22,15 +22,7 @@
         "command": "extension-to-3-0.helloWorld",
         "title": "Hello World"
       },
-      {
-        "command": "tdengine-vs-code-extension.showWebview",
-        "category": "my-extension",
-        "title": "show webview",
-        "icon": {
-          "light": "resources/light/edit.svg",
-          "dark": "resources/dark/edit.svg"
-        }
-      },
+      
       {
         "command": "nodeDependencies.refreshEntry",
         "title": "refresh  World"
@@ -55,8 +47,8 @@
         "command": "nodeDependencies.checkTable",
         "title": "Check",
         "icon": {
-          "light": "resources/light/edit.svg",
-          "dark": "resources/dark/edit.svg"
+          "light": "resources/eye.svg",
+          "dark": "resources/eye.svg"
         }
       },
       {
@@ -69,7 +61,7 @@
         {
           "id": "package-explorer",
           "title": "Package Explorer",
-          "icon": "resources/dep.svg"
+          "icon": "resources/site-logo.png"
         }
       ]
     },
@@ -79,7 +71,7 @@
           "id": "nodeDependencies",
           "name": "Node Dependencies",
           "icon": "resources/dep.svg",
-          "contextualTitle": "Package Explorer"
+          "contextualTitle": "TDengine"
         }
       ]
     },

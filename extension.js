@@ -1,5 +1,6 @@
 const vscode = require('vscode');
 const taos = require("@tdengine/client");
+const path = require('path');
 
 
 /**
@@ -178,7 +179,7 @@ function activate(context) {
                     switch (message.command) {
                         case 'alert':
                             
-                            vscode.window.showInformationMessage(message.sql_command);
+                            
                             try{
                                 let query_text = await executeSql(message.sql_command,0,cursor)
                                 console.log(query_text);
@@ -186,6 +187,7 @@ function activate(context) {
                                 command_panel.webview.html = await get_command_window(mem);
                             }
                             catch (e){
+                                vscode.window.showErrorMessage(message.sql_command +" is not a lygal SQL");
                                 console.log(e);
                                 return;
                             }
@@ -238,14 +240,24 @@ function activate(context) {
                             config: connect_td['_config'],
                             port: connect_td['_port'],
                         });
+                        vscode.window.showInformationMessage(message.order)
                         var cursor = conn.cursor()
                         // vscode.window.showInformationMessage(message.sort_item);
                         if( message.sort_item === 'default'){
                             let query_text = await executeQuery_get_html("select * from " + node['frombase'] + "." + node['label']+ " limit 0,10", cursor, true)
                             
+                            
                             return;
                         }
-                        let query_text = await executeQuery_get_html("select * from " + node['frombase'] + "." + node['label']+" order by "+ message.sort_item+ " limit 0,10", cursor, true)
+                        let query_text;
+                        if(message.order ==="ASC"){
+                            query_text = await executeQuery_get_html("select * from " + node['frombase'] + "." + node['label']+" order by "+ message.sort_item+ " limit 0,10", cursor, true)
+
+                        }
+                        else{
+                            query_text = await executeQuery_get_html("select * from " + node['frombase'] + "." + node['label']+" order by "+ message.sort_item+ " DESC limit 0,10", cursor, true)
+
+                        }
                         // console.log("select * from " + node['frombase'] + "." + node['label']+" order by "+ message.sort_item+ " limit 0,10")
                         table_panel.webview.html = query_text;
                         return;
@@ -367,7 +379,7 @@ async function executeQuery_get_html(sql, cursor, if_print = false) {
             res[2] += '</tr>'
         }
         res[2] += "</tbody>"
-        res[3] += `</select></div><div class="col-sm-4 "><button type="button" class="btn btn-light" onclick="myFunction()">Sort by</button></div>`
+        res[3] += `</select></div><div class="col-sm-2 "><button type="button" class="btn btn-light" onclick="myFunction()">Sort by</button></div>`
 
         result.pretty();
 
@@ -385,12 +397,17 @@ async function executeQuery_get_html(sql, cursor, if_print = false) {
   <body style="background-color:rgba(0,0,0)" >
   <div class="bg-black text-white">
      <h3 >` + test[0] + `</h3>
-     <table class="table table-dark table-hover">
+     <table class="table table-dark table-striped table-hover">
 	  ` + test[1] + `
       ` + test[2] + `
       </table>
       
       `+test[3]+`
+      <div class="col-sm-2 ">
+      <select class="form-select" id="order" name="order">
+      <option value="ASC">Default</option>
+      <option value="DESC">Reverse</option>
+        </div>
       </div>
       
      
@@ -403,6 +420,7 @@ async function executeQuery_get_html(sql, cursor, if_print = false) {
           vscode.postMessage({
               command: 'alert',
               sort_item:document.getElementById("sort_item").value,
+              order:document.getElementById("order").value,
           });
           document.getElementById("demo").innerHTML="配置有误，请重新尝试!";
       }
@@ -557,6 +575,8 @@ class BaseNode extends vscode.TreeItem {
         super(label, collapsibleState);
         this.tba = table_arry;
         this.contextValue = "basenode";
+        this.iconPath = path.join(__filename, '..', 'resources', 'dark', 'database.svg');
+        
     }
 }
 
@@ -565,6 +585,7 @@ class TableNode extends vscode.TreeItem {
         super(label, collapsibleState);
         this.frombase = frombase;
         this.contextValue = "tablenode";
+        this.iconPath = path.join(__filename, '..', 'resources', 'table.svg');
     }
 }
 
